@@ -12,19 +12,24 @@
         }
 
         :root {
-            --primary: #D9C7A8;
-            --primary-light: #EFE3CC;
-            --primary-dark: #B8AB93;
-            --bg-dark: #0a0e27;
-            --bg-darker: #050710;
-            --accent: #ff6b6b;
-            --success: #51cf66;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --bg: #f8fafc;
+            --bg-white: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
             font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            color: var(--primary-light);
+            background: linear-gradient(135deg, var(--bg) 0%, #f1f5f9 100%);
+            color: var(--text);
             min-height: 100vh;
             padding: 20px;
         }
@@ -32,12 +37,11 @@
         .container {
             max-width: 750px;
             margin: 0 auto;
-            background: rgba(10, 14, 39, 0.98);
-            border: 1px solid rgba(217, 199, 168, 0.15);
+            background: var(--bg-white);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 50px 40px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         .header {
@@ -59,25 +63,23 @@
 
         .logo {
             font-size: 14px;
-            color: var(--primary-dark);
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 3px;
             margin-bottom: 12px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
         .header p {
-            font-size: 13px;
-            color: var(--primary-dark);
+            font-size: 14px;
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-weight: 600;
@@ -94,14 +96,14 @@
         }
 
         .form-section-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(217, 199, 168, 0.1);
+            border-bottom: 2px solid var(--primary);
         }
 
         .field {
@@ -110,10 +112,10 @@
 
         .field label {
             display: block;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--primary);
+            color: var(--text);
             margin-bottom: 8px;
             letter-spacing: 0.8px;
         }
@@ -121,11 +123,11 @@
         .field input,
         .field textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 14px;
             border-radius: 8px;
-            border: 1.5px solid rgba(217, 199, 168, 0.2);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--primary-light);
+            border: 1.5px solid var(--border);
+            background: var(--bg-white);
+            color: var(--text);
             font-family: inherit;
             font-size: 14px;
             transition: all 0.3s ease;
@@ -135,13 +137,12 @@
         .field textarea:focus {
             outline: none;
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 20px rgba(217, 199, 168, 0.15);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .field input::placeholder,
         .field textarea::placeholder {
-            color: var(--primary-dark);
+            color: var(--text-light);
         }
 
         .field textarea {
@@ -155,9 +156,9 @@
             align-items: flex-start;
             margin-top: 20px;
             padding: 16px;
-            background: rgba(217, 199, 168, 0.03);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(16, 185, 129, 0.05));
             border-radius: 8px;
-            border-left: 3px solid var(--primary);
+            border: 1.5px solid rgba(37, 99, 235, 0.1);
         }
 
         .checkbox-field input[type="checkbox"] {
@@ -173,21 +174,21 @@
             margin: 0;
             font-size: 13px;
             text-transform: none;
-            color: var(--primary-light);
+            color: var(--text);
             line-height: 1.6;
             cursor: pointer;
             font-weight: 400;
         }
 
         .terms-box {
-            background: rgba(217, 199, 168, 0.03);
-            border-left: 3px solid var(--primary);
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
             padding: 18px;
             border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1.7;
-            color: var(--primary-dark);
+            color: var(--text);
             max-height: 320px;
             overflow-y: auto;
         }
@@ -212,7 +213,7 @@
             padding: 16px 28px;
             border: none;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.2px;
@@ -223,26 +224,18 @@
         }
 
         .btn.primary {
-            background: linear-gradient(135deg, var(--primary) 0%, #c9b896 100%);
-            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
         }
 
         .btn.primary:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(217, 199, 168, 0.4);
-        }
-
-        .btn.primary:active:not(:disabled) {
-            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-        }
-
-        .btn.loading {
-            pointer-events: none;
         }
 
         .btn.loading::after {
@@ -253,8 +246,8 @@
             top: 50%;
             right: 20px;
             transform: translateY(-50%);
-            border: 2px solid rgba(0,0,0,0.2);
-            border-top-color: var(--bg-dark);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -268,7 +261,7 @@
             font-size: 13px;
             margin-top: 12px;
             padding: 12px 14px;
-            background: rgba(255, 107, 107, 0.1);
+            background: rgba(239, 68, 68, 0.1);
             border-left: 3px solid var(--accent);
             border-radius: 4px;
             display: none;
@@ -286,8 +279,8 @@
         }
 
         .success-message {
-            background: rgba(81, 207, 102, 0.1);
-            border: 1.5px solid rgba(81, 207, 102, 0.3);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
             border-radius: 8px;
             padding: 20px;
             color: var(--success);
@@ -306,12 +299,11 @@
         }
 
         .disclaimer {
-            font-size: 11px;
-            color: var(--primary-dark);
+            font-size: 12px;
+            color: var(--text-light);
             text-align: center;
             margin-top: 24px;
             line-height: 1.6;
-            opacity: 0.8;
         }
 
         .notification {
@@ -319,13 +311,14 @@
             top: 20px;
             right: 20px;
             padding: 16px 20px;
-            background: rgba(51, 207, 102, 0.95);
+            background: var(--success);
             color: white;
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             animation: slideInRight 0.4s ease-out;
             z-index: 9999;
             max-width: 90%;
+            font-weight: 600;
         }
 
         @keyframes slideInRight {
@@ -340,11 +333,7 @@
         }
 
         .notification.error {
-            background: rgba(255, 107, 107, 0.95);
-        }
-
-        .notification.info {
-            background: rgba(66, 153, 225, 0.95);
+            background: var(--accent);
         }
 
         @media (max-width: 600px) {
@@ -353,7 +342,7 @@
             }
 
             .header h1 {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .button-group {
@@ -480,7 +469,7 @@
             <div class="disclaimer">
                 By submitting this form, you confirm you've read and agree to our terms. Your booking will be reviewed within 24 hours.
                 <br><br>
-                <a href="admin.html" style="color: var(--primary); text-decoration: none;">→ Admin Dashboard</a>
+                <a href="admin.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">→ Admin Dashboard</a>
             </div>
 
             <!-- FormSubmit hidden fields -->
@@ -521,7 +510,6 @@
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
-            // Store in localStorage for dashboard
             const formData = {
                 brandName: document.getElementById('brandName').value,
                 contactPerson: document.getElementById('contactPerson').value,
@@ -540,16 +528,6 @@
             localStorage.setItem('anqakhans_bookings', JSON.stringify(bookings));
 
             showNotification('✓ Booking submitted successfully!', 'success');
-        });
-
-        // Add some interactivity
-        document.querySelectorAll('.field input, .field textarea').forEach(field => {
-            field.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.01)';
-            });
-            field.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
         });
     </script>
 </body>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnQa Khans - Admin Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/SheetJS/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,20 +13,24 @@
         }
 
         :root {
-            --primary: #D9C7A8;
-            --primary-light: #EFE3CC;
-            --primary-dark: #B8AB93;
-            --bg-dark: #0a0e27;
-            --bg-darker: #050710;
-            --accent: #ff6b6b;
-            --success: #51cf66;
-            --warning: #ffd43b;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --bg: #f8fafc;
+            --bg-white: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
             font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            color: var(--primary-light);
+            background: linear-gradient(135deg, var(--bg) 0%, #f1f5f9 100%);
+            color: var(--text);
             min-height: 100vh;
             padding: 20px;
         }
@@ -36,7 +41,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            background: linear-gradient(135deg, var(--bg) 0%, #f1f5f9 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -48,15 +53,14 @@
         }
 
         .login-box {
-            background: rgba(10, 14, 39, 0.98);
-            border: 1px solid rgba(217, 199, 168, 0.15);
+            background: var(--bg-white);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 50px 40px;
             max-width: 400px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .login-box h1 {
@@ -68,7 +72,7 @@
         }
 
         .login-box p {
-            color: var(--primary-dark);
+            color: var(--text-light);
             margin-bottom: 30px;
             font-size: 13px;
         }
@@ -80,7 +84,7 @@
         .login-field label {
             display: block;
             font-size: 12px;
-            color: var(--primary);
+            color: var(--text);
             text-transform: uppercase;
             margin-bottom: 8px;
             font-weight: 600;
@@ -90,10 +94,10 @@
         .login-field input {
             width: 100%;
             padding: 12px 14px;
-            border: 1.5px solid rgba(217, 199, 168, 0.2);
+            border: 1.5px solid var(--border);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--primary-light);
+            background: var(--bg-white);
+            color: var(--text);
             font-size: 14px;
             transition: all 0.3s ease;
         }
@@ -101,15 +105,14 @@
         .login-field input:focus {
             outline: none;
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 20px rgba(217, 199, 168, 0.15);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .login-btn {
             width: 100%;
             padding: 14px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, #c9b896 100%);
-            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
             border: none;
             border-radius: 8px;
             font-weight: 800;
@@ -121,7 +124,7 @@
 
         .login-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(217, 199, 168, 0.4);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
         }
 
         .login-error {
@@ -145,7 +148,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            border-bottom: 1px solid rgba(217, 199, 168, 0.15);
+            border-bottom: 1px solid var(--border);
             padding-bottom: 20px;
         }
 
@@ -164,8 +167,8 @@
 
         .btn {
             padding: 10px 16px;
-            background: rgba(217, 199, 168, 0.2);
-            border: 1px solid rgba(217, 199, 168, 0.3);
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
             border-radius: 6px;
             color: var(--primary);
             cursor: pointer;
@@ -177,58 +180,54 @@
         }
 
         .btn:hover {
-            background: rgba(217, 199, 168, 0.3);
+            background: var(--primary);
+            color: white;
             border-color: var(--primary);
         }
 
         .btn.logout {
-            background: rgba(255, 107, 107, 0.2);
-            border-color: rgba(255, 107, 107, 0.3);
+            background: transparent;
             color: var(--accent);
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
         .btn.logout:hover {
-            background: rgba(255, 107, 107, 0.3);
+            background: var(--accent);
+            color: white;
             border-color: var(--accent);
+        }
+
+        .btn.export {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn.export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
         .stat-card {
-            background: rgba(10, 14, 39, 0.95);
-            border: 1px solid rgba(217, 199, 168, 0.15);
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
         .stat-card:hover {
-            border-color: rgba(217, 199, 168, 0.3);
+            border-color: var(--primary);
             transform: translateY(-5px);
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
         }
 
         .stat-card .number {
@@ -240,28 +239,28 @@
 
         .stat-card .label {
             font-size: 11px;
-            color: var(--primary-dark);
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
         }
 
         .stat-card .icon {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 8px;
         }
 
         .bookings-table {
-            background: rgba(10, 14, 39, 0.95);
-            border: 1px solid rgba(217, 199, 168, 0.15);
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
         }
 
         .table-header {
-            background: linear-gradient(135deg, rgba(217, 199, 168, 0.1), rgba(217, 199, 168, 0.05));
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(16, 185, 129, 0.05));
             padding: 20px;
-            border-bottom: 1px solid rgba(217, 199, 168, 0.15);
+            border-bottom: 1px solid var(--border);
             display: grid;
             grid-template-columns: 2fr 2fr 2fr 1.5fr 1fr;
             gap: 15px;
@@ -274,7 +273,7 @@
 
         .booking-row {
             padding: 18px 20px;
-            border-bottom: 1px solid rgba(217, 199, 168, 0.1);
+            border-bottom: 1px solid var(--border);
             display: grid;
             grid-template-columns: 2fr 2fr 2fr 1.5fr 1fr;
             gap: 15px;
@@ -284,7 +283,7 @@
         }
 
         .booking-row:hover {
-            background: rgba(217, 199, 168, 0.05);
+            background: rgba(37, 99, 235, 0.03);
         }
 
         .booking-row:last-child {
@@ -293,12 +292,12 @@
 
         .brand-name {
             font-weight: 700;
-            color: var(--primary-light);
+            color: var(--text);
         }
 
         .contact-info {
             font-size: 12px;
-            color: var(--primary-dark);
+            color: var(--text-light);
             line-height: 1.5;
         }
 
@@ -308,9 +307,9 @@
         }
 
         .action-btn {
-            padding: 8px 12px;
-            background: rgba(217, 199, 168, 0.2);
-            border: 1px solid rgba(217, 199, 168, 0.3);
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border);
             border-radius: 4px;
             color: var(--primary);
             cursor: pointer;
@@ -322,26 +321,29 @@
         }
 
         .action-btn:hover {
-            background: rgba(217, 199, 168, 0.3);
-            transform: translateY(-2px);
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn.delete {
+            color: var(--accent);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--accent);
+            color: white;
         }
 
         .empty-state {
             padding: 60px 40px;
             text-align: center;
-            color: var(--primary-dark);
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+            color: var(--text-light);
         }
 
         .empty-state h3 {
             font-size: 18px;
-            color: var(--primary);
+            color: var(--text);
             margin-bottom: 8px;
         }
 
@@ -352,7 +354,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 9998;
             align-items: center;
             justify-content: center;
@@ -364,20 +366,19 @@
         }
 
         .modal-content {
-            background: rgba(10, 14, 39, 0.98);
-            border: 1px solid rgba(217, 199, 168, 0.15);
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
             border-radius: 12px;
             padding: 36px;
             max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
             width: 100%;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         .modal-header {
-            border-bottom: 1px solid rgba(217, 199, 168, 0.15);
+            border-bottom: 1px solid var(--border);
             padding-bottom: 18px;
             margin-bottom: 24px;
             display: flex;
@@ -395,19 +396,14 @@
         .modal-close {
             background: none;
             border: none;
-            color: var(--primary);
+            color: var(--text-light);
             font-size: 28px;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease;
+            transition: color 0.2s ease;
         }
 
         .modal-close:hover {
-            transform: scale(1.2);
+            color: var(--accent);
         }
 
         .detail-item {
@@ -416,7 +412,7 @@
 
         .detail-label {
             font-size: 10px;
-            color: var(--primary-dark);
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 5px;
@@ -424,11 +420,11 @@
         }
 
         .detail-value {
-            color: var(--primary-light);
+            color: var(--text);
             font-size: 14px;
             line-height: 1.6;
             padding: 10px 12px;
-            background: rgba(217, 199, 168, 0.05);
+            background: var(--bg);
             border-left: 2px solid var(--primary);
             border-radius: 4px;
         }
@@ -438,10 +434,10 @@
             top: 20px;
             right: 20px;
             padding: 16px 20px;
-            background: rgba(81, 207, 102, 0.95);
+            background: var(--success);
             color: white;
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             animation: slideInRight 0.4s ease-out;
             z-index: 10000;
             max-width: 90%;
@@ -460,7 +456,7 @@
         }
 
         .notification.error {
-            background: rgba(255, 107, 107, 0.95);
+            background: var(--accent);
         }
 
         @media (max-width: 1000px) {
@@ -475,7 +471,7 @@
             }
 
             .booking-row {
-                border: 1px solid rgba(217, 199, 168, 0.15);
+                border: 1px solid var(--border);
                 border-radius: 8px;
                 margin-bottom: 12px;
                 padding: 16px;
@@ -522,6 +518,7 @@
         <div class="header">
             <h1>📊 Dashboard</h1>
             <div class="header-actions">
+                <button class="btn export" onclick="exportToExcel()">📥 Export to Excel</button>
                 <button class="btn" onclick="refreshData()">🔄 Refresh</button>
                 <button class="btn logout" onclick="logout()">🚪 Logout</button>
             </div>
@@ -574,7 +571,7 @@
     </div>
 
     <script>
-        const ADMIN_PASSWORD = 'anqakhans2026'; // Change this to your password
+        const ADMIN_PASSWORD = 'anqakhans2026';
         let bookingsData = [];
 
         function checkPassword() {
@@ -636,9 +633,7 @@
             if (bookingsData.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M9 12h6m-6 4h6M5 8h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8a2 2 0 012-2z"></path>
-                        </svg>
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
                         <h3>No bookings yet</h3>
                         <p>New booking requests will appear here</p>
                     </div>
@@ -659,9 +654,9 @@
                             <div>${booking.phone}</div>
                         </div>
                         <div class="shoot-date">${new Date(booking.shootDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</div>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 6px;">
                             <button class="action-btn" onclick="viewDetails(${booking.id})">View</button>
-                            <button class="action-btn" onclick="deleteBooking(${booking.id})" style="background: rgba(255, 107, 107, 0.2); color: var(--accent); border-color: rgba(255, 107, 107, 0.3);">Delete</button>
+                            <button class="action-btn delete" onclick="deleteBooking(${booking.id})">Delete</button>
                         </div>
                     </div>
                 `).join('');
@@ -732,6 +727,50 @@
             }
         }
 
+        function exportToExcel() {
+            if (bookingsData.length === 0) {
+                showNotification('❌ No bookings to export', 'error');
+                return;
+            }
+
+            const exportData = bookingsData.map(b => ({
+                'Brand Name': b.brandName,
+                'Contact Person': b.contactPerson,
+                'Email': b.email,
+                'Phone': b.phone,
+                'Studio Address': b.unit,
+                'Shoot Date': new Date(b.shootDate).toLocaleDateString('en-US'),
+                'Team Size': b.teamSize,
+                'Purpose': b.purpose || '',
+                'Notes': b.notes || '',
+                'Submitted': new Date(b.submittedAt).toLocaleString('en-US')
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Bookings');
+
+            // Auto-width columns
+            const colWidths = [
+                { wch: 20 },
+                { wch: 15 },
+                { wch: 25 },
+                { wch: 15 },
+                { wch: 25 },
+                { wch: 12 },
+                { wch: 10 },
+                { wch: 20 },
+                { wch: 30 },
+                { wch: 20 }
+            ];
+            ws['!cols'] = colWidths;
+
+            const fileName = `AnQaKhans-Bookings-${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+
+            showNotification('✓ File exported successfully!', 'success');
+        }
+
         function refreshData() {
             loadBookings();
             showNotification('✓ Data refreshed', 'success');
@@ -745,7 +784,6 @@
             setTimeout(() => notif.remove(), 3000);
         }
 
-        // Check if already logged in
         window.addEventListener('load', () => {
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
@@ -754,14 +792,12 @@
             }
         });
 
-        // Auto-refresh every 30 seconds
         setInterval(() => {
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 loadBookings();
             }
         }, 30000);
 
-        // Allow Enter key to login
         document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') checkPassword();
         });
