@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnQa Khans - Photoshoot Booking</title>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -376,7 +377,7 @@
             <div>Thank you! We'll review your request within 24 hours.</div>
         </div>
 
-        <form id="bookingForm" method="POST" action="https://formsubmit.co/reservationanqakhans@gmail.com">
+        <form id="bookingForm">
             <!-- Brand Information -->
             <div class="form-section">
                 <h3 class="form-section-title">📋 Brand Information</h3>
@@ -488,12 +489,6 @@
                 <a href="admin.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">→ Admin Dashboard</a>
             </div>
 
-            <!-- FormSubmit hidden fields -->
-            <input type="hidden" name="_subject" value="New Photoshoot Booking - AnQa Khans">
-            <input type="hidden" name="_next" value="https://aplusaura.github.io/anqakhans-photoshoot-booking/">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Thank you for your booking request! We will review your details within 24 hours and get back to you soon.">
-            <input type="hidden" name="_cc" value="customer_email">
         </form>
     </div>
 
@@ -501,6 +496,9 @@
         let signaturePad;
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize EmailJS
+            emailjs.init('anqakhans_booking_service');
+
             // Initialize Signature Pad
             const canvas = document.getElementById('signaturePad');
             signaturePad = new SignaturePad(canvas, {
@@ -551,12 +549,12 @@
             setTimeout(() => notif.remove(), 4000);
         }
 
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
             errorMsg.classList.remove('show');
             errorMsg.textContent = '';
 
             if (!document.getElementById('ackBox').checked) {
-                e.preventDefault();
                 errorMsg.textContent = '⚠️ Please accept the terms and conditions to proceed.';
                 errorMsg.classList.add('show');
                 showNotification('Please accept the terms', 'error');
@@ -564,7 +562,6 @@
             }
 
             if (signaturePad.isEmpty()) {
-                e.preventDefault();
                 errorMsg.textContent = '⚠️ Please sign above to complete your booking.';
                 errorMsg.classList.add('show');
                 showNotification('Please sign the form', 'error');
@@ -588,11 +585,56 @@
                 submittedAt: new Date().toISOString()
             };
 
-            let bookings = JSON.parse(localStorage.getItem('anqakhans_bookings') || '[]');
-            bookings.push({...formData, id: bookings.length + 1});
-            localStorage.setItem('anqakhans_bookings', JSON.stringify(bookings));
+            try {
+                // Send email to admin
+                await emailjs.send('anqakhans_booking_service', 'admin_notification', {
+                    admin_email: 'reservationanqakhans@gmail.com',
+                    brand_name: formData.brandName,
+                    contact_person: formData.contactPerson,
+                    client_email: formData.email,
+                    client_phone: formData.phone,
+                    studio_address: formData.unit,
+                    shoot_date: formData.shootDate,
+                    team_size: formData.teamSize,
+                    purpose: formData.purpose,
+                    notes: formData.notes
+                });
 
-            showNotification('✓ Booking submitted successfully!', 'success');
+                // Send confirmation email to client
+                await emailjs.send('anqakhans_booking_service', 'client_confirmation', {
+                    client_email: formData.email,
+                    client_name: formData.contactPerson,
+                    brand_name: formData.brandName,
+                    shoot_date: formData.shootDate
+                });
+
+                // Save to localStorage
+                let bookings = JSON.parse(localStorage.getItem('anqakhans_bookings') || '[]');
+                bookings.push({...formData, id: bookings.length + 1});
+                localStorage.setItem('anqakhans_bookings', JSON.stringify(bookings));
+
+                // Show success
+                successMsg.classList.add('show');
+                form.style.display = 'none';
+                showNotification('✓ Booking submitted successfully!', 'success');
+
+                // Scroll to top
+                window.scrollTo({top: 0, behavior: 'smooth'});
+
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.textContent = '❌ Error submitting booking. Please try again.';
+                errorMsg.classList.add('show');
+                showNotification('Booking failed - please try again', 'error');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
         });
     </script>
 </body>
