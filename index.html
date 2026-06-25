@@ -433,21 +433,173 @@
             }
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .form-section {
+                padding: 20px;
+                margin-bottom: 16px;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 16px;
             }
 
             .signature-section {
                 grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+
+            .signature-box {
+                padding: 16px;
+            }
+
+            .signature-canvas {
+                height: 150px;
+                margin-bottom: 8px;
             }
 
             .header h1 {
-                font-size: 24px;
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .header {
+                padding: 20px 0;
+                margin-bottom: 24px;
+            }
+
+            .section-title {
+                font-size: 12px;
+                margin-bottom: 16px;
+            }
+
+            .field label {
+                font-size: 11px;
+            }
+
+            .field input,
+            .field textarea {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .terms-box {
+                padding: 12px;
+                max-height: 280px;
+                font-size: 11px;
+            }
+
+            .checkbox-field {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .checkbox-field label {
+                font-size: 11px;
             }
 
             .button-group {
                 flex-direction: column;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .btn {
+                padding: 14px 20px;
+                font-size: 11px;
+            }
+
+            .signature-instruction {
+                font-size: 10px;
+            }
+
+            .clear-btn {
+                padding: 6px;
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                margin: 0;
+            }
+
+            .form-section {
+                padding: 16px;
+                border-radius: 8px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .signature-box {
+                padding: 12px;
+            }
+
+            .signature-canvas {
+                height: 120px;
+            }
+
+            .date-field label {
+                font-size: 9px;
+            }
+
+            .date-field input {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .field input,
+            .field textarea {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .terms-box {
+                padding: 10px;
+                max-height: 200px;
+                font-size: 10px;
+            }
+
+            .terms-content ol {
+                margin-left: 16px;
+            }
+
+            .checkbox-field {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .checkbox-field input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+            }
+
+            .checkbox-field label {
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 10px;
+                letter-spacing: 0.5px;
             }
         }
     </style>
@@ -664,7 +816,40 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Client Signature Pad
             const clientCanvas = document.getElementById('clientSignature');
-            clientSigPad = new SignaturePad(clientCanvas, { backgroundColor: 'rgb(255, 255, 255)' });
+            clientSigPad = new SignaturePad(clientCanvas, {
+                backgroundColor: 'rgb(255, 255, 255)',
+                minWidth: 2,
+                maxWidth: 3,
+                throttle: 16
+            });
+
+            // Fix canvas size on mobile
+            function resizeCanvases() {
+                const clientCanvas = document.getElementById('clientSignature');
+
+                // Get actual displayed size
+                const rect = clientCanvas.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+
+                // Set canvas resolution
+                clientCanvas.width = rect.width * dpr;
+                clientCanvas.height = rect.height * dpr;
+
+                // Scale drawing context to match
+                const ctx = clientCanvas.getContext('2d');
+                ctx.scale(dpr, dpr);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, rect.width, rect.height);
+
+                // Redraw signature if exists
+                if (!clientSigPad.isEmpty()) {
+                    const data = clientSigPad.toData();
+                    clientSigPad.fromData(data);
+                }
+            }
+
+            resizeCanvases();
+            window.addEventListener('resize', resizeCanvases);
 
             // Set today's date
             document.getElementById('clientDate').valueAsDate = new Date();
