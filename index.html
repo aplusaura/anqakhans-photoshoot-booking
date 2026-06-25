@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnQa Khans - Photoshoot Booking</title>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,9 +13,9 @@
         }
 
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e40af;
+            --primary: #D4A017;
+            --primary-light: #FFD700;
+            --primary-dark: #B8860B;
             --secondary: #10b981;
             --bg: #f8fafc;
             --bg-white: #ffffff;
@@ -460,6 +461,19 @@
                 </div>
             </div>
 
+            <!-- E-Signature -->
+            <div class="form-section">
+                <h3 class="form-section-title">✍️ Your Signature</h3>
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px;">Draw your signature below *</label>
+                <div style="border: 2px dashed var(--border); border-radius: 8px; padding: 12px; background: var(--bg); margin-bottom: 12px;">
+                    <canvas id="signaturePad" width="700" height="180" style="border: 1px solid var(--border); border-radius: 6px; cursor: crosshair; display: block; background: white;"></canvas>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn" id="clearSignature" style="flex: 1; background: transparent; border: 1.5px solid var(--border); color: var(--text); padding: 10px 16px; font-size: 12px;">Clear Signature</button>
+                    <span id="signatureStatus" style="flex: 1; text-align: right; font-size: 12px; color: var(--accent); display: none;">⚠️ Please sign above</span>
+                </div>
+            </div>
+
             <div class="error-message" id="errorMsg"></div>
 
             <div class="button-group">
@@ -482,6 +496,46 @@
     </div>
 
     <script>
+        let signaturePad;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Signature Pad
+            const canvas = document.getElementById('signaturePad');
+            signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)'
+            });
+
+            // Resize canvas
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext('2d').scale(ratio, ratio);
+                signaturePad.clear();
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Clear button
+            document.getElementById('clearSignature').addEventListener('click', (e) => {
+                e.preventDefault();
+                signaturePad.clear();
+                document.getElementById('signatureStatus').style.display = 'none';
+            });
+
+            // Track signature
+            canvas.addEventListener('mouseup', checkSignature);
+            canvas.addEventListener('touchend', checkSignature);
+        });
+
+        function checkSignature() {
+            if (signaturePad.isEmpty()) {
+                document.getElementById('signatureStatus').style.display = 'block';
+            } else {
+                document.getElementById('signatureStatus').style.display = 'none';
+            }
+        }
+
         const form = document.getElementById('bookingForm');
         const errorMsg = document.getElementById('errorMsg');
         const successMsg = document.getElementById('successMsg');
@@ -507,6 +561,14 @@
                 return;
             }
 
+            if (signaturePad.isEmpty()) {
+                e.preventDefault();
+                errorMsg.textContent = '⚠️ Please sign above to complete your booking.';
+                errorMsg.classList.add('show');
+                showNotification('Please sign the form', 'error');
+                return;
+            }
+
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
@@ -520,6 +582,7 @@
                 teamSize: document.getElementById('teamSize').value,
                 purpose: document.getElementById('purpose').value,
                 notes: document.getElementById('notes').value,
+                signature: signaturePad.toDataURL(),
                 submittedAt: new Date().toISOString()
             };
 
