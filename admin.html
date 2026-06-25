@@ -659,8 +659,9 @@
                             <div>${booking.phone}</div>
                         </div>
                         <div class="shoot-date">${new Date(booking.shootDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</div>
-                        <div>
+                        <div style="display: flex; gap: 8px;">
                             <button class="action-btn" onclick="viewDetails(${booking.id})">View</button>
+                            <button class="action-btn" onclick="deleteBooking(${booking.id})" style="background: rgba(255, 107, 107, 0.2); color: var(--accent); border-color: rgba(255, 107, 107, 0.3);">Delete</button>
                         </div>
                     </div>
                 `).join('');
@@ -719,6 +720,16 @@
 
         function closeModal() {
             document.getElementById('detailModal').classList.remove('show');
+        }
+
+        function deleteBooking(id) {
+            if (confirm('⚠️ Are you sure you want to delete this booking?\n\nThis action cannot be undone!')) {
+                bookingsData = bookingsData.filter(b => b.id !== id);
+                localStorage.setItem('anqakhans_bookings', JSON.stringify(bookingsData));
+                renderDashboard();
+                closeModal();
+                showNotification('✓ Booking deleted', 'success');
+            }
         }
 
         function refreshData() {
