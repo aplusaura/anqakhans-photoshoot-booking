@@ -781,6 +781,13 @@
 
         <div id="agreementsContainer"></div>
 
+        <!-- Export Button -->
+        <div style="margin-top: 20px; margin-bottom: 20px;">
+            <button class="btn" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none; padding: 12px 24px;" onclick="exportToExcel()">
+                📥 Export to Excel
+            </button>
+        </div>
+
         <!-- Data Table View -->
         <div style="margin-top: 30px;">
             <h2 style="font-size: 16px; color: var(--primary); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">📊 All Agreements Data</h2>
@@ -990,6 +997,55 @@
             notif.textContent = message;
             document.body.appendChild(notif);
             setTimeout(() => notif.remove(), 3000);
+        }
+
+        function exportToExcel() {
+            if (agreementsData.length === 0) {
+                showNotification('❌ No agreements to export', 'error');
+                return;
+            }
+
+            const exportData = agreementsData.map(a => ({
+                'التاريخ': new Date(a.submittedAt).toLocaleDateString('ar-EG'),
+                'اسم العلامة التجارية': a.brandName,
+                'اسم المتصل': a.contactPerson,
+                'البريد الإلكتروني': a.email,
+                'الهاتف': a.phone,
+                'غرض الجلسة': a.purpose || '',
+                'عنوان الاستوديو': a.unit,
+                'تاريخ الجلسة': new Date(a.shootDate).toLocaleDateString('ar-EG'),
+                'حجم الفريق': a.teamSize,
+                'ملاحظات': a.notes || '',
+                'الحالة': a.status || 'Pending',
+                'تاريخ التوقيع': new Date(a.clientDate).toLocaleDateString('ar-EG')
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'الاتفاقيات');
+
+            // تنسيق الأعمدة
+            const colWidths = [
+                { wch: 14 },
+                { wch: 20 },
+                { wch: 15 },
+                { wch: 25 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 25 },
+                { wch: 14 },
+                { wch: 10 },
+                { wch: 30 },
+                { wch: 12 },
+                { wch: 14 }
+            ];
+            ws['!cols'] = colWidths;
+
+            // حفظ الملف
+            const fileName = `AnQaKhans-Agreements-${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+
+            showNotification('✓ File exported successfully!', 'success');
         }
 
         window.addEventListener('load', () => {
