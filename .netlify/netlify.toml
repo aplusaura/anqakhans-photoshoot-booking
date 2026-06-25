@@ -1,0 +1,76 @@
+headersOrigin = "config"
+redirectsOrigin = "config"
+plugins = []
+functionsDirectory = "C:\\temp\\anqakhans-booking-deploy\\functions"
+functionsDirectoryOrigin = "config"
+
+[dev]
+functions = "functions"
+publish = "."
+port = 8888.0
+
+[env]
+
+[env.production]
+
+[env.production.environment]
+SITE_NAME = "anqakhans-photoshoot-booking"
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "C:\\temp\\anqakhans-booking-deploy"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "echo 'No build needed'"
+functions = "C:\\temp\\anqakhans-booking-deploy\\functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Content-Type-Options = "nosniff"
+X-Frame-Options = "SAMEORIGIN"
+X-XSS-Protection = "1; mode=block"
+Content-Security-Policy = "default-src 'self' 'unsafe-inline'"
+Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+for = "/*.{js,css,png,jpg,jpeg,gif,svg,woff,woff2,ttf,eot,json}"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.html"
+
+[headers.values]
+Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
