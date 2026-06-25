@@ -633,15 +633,18 @@
                     <div class="signature-box host">
                         <h3>AnQa Khans</h3>
                         <div class="signature-subtitle">Authorized Representative — Host</div>
-                        <div class="signature-instruction">Pre-authorized representative mark</div>
-                        <canvas id="hostSignature" class="signature-canvas" width="300" height="120"></canvas>
-                        <button type="button" class="clear-btn" onclick="clearHostSig()">Re-sign</button>
-                        <div style="text-align: center; padding: 8px; background: rgba(239, 227, 204, 0.1); border-radius: 4px; margin-bottom: 10px;">
+                        <div style="text-align: center; padding: 20px; background: rgba(239, 227, 204, 0.1); border-radius: 8px; border: 1px dashed rgba(239, 227, 204, 0.3); margin-bottom: 12px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 48px; margin-bottom: 8px;">✓</div>
+                                <div style="font-size: 11px; color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Pre-Authorized</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: rgba(239, 227, 204, 0.1); border-radius: 4px; margin-bottom: 12px;">
                             <div class="host-pre-auth">pre-authorized • 25 June 2026</div>
                         </div>
                         <div class="date-field">
                             <label>Date</label>
-                            <input type="date" id="hostDate" value="2026-06-25" readonly>
+                            <input type="date" id="hostDate" value="2026-06-25" readonly style="opacity: 0.7;">
                         </div>
                     </div>
                 </div>
@@ -663,20 +666,12 @@
             const clientCanvas = document.getElementById('clientSignature');
             clientSigPad = new SignaturePad(clientCanvas, { backgroundColor: 'rgb(255, 255, 255)' });
 
-            // Initialize Host Signature Pad
-            const hostCanvas = document.getElementById('hostSignature');
-            hostSigPad = new SignaturePad(hostCanvas, { backgroundColor: 'rgb(255, 255, 255)' });
-
             // Set today's date
             document.getElementById('clientDate').valueAsDate = new Date();
         });
 
         function clearClientSig() {
             clientSigPad.clear();
-        }
-
-        function clearHostSig() {
-            hostSigPad.clear();
         }
 
         function showNotification(message, type = 'success') {
@@ -710,13 +705,6 @@
                 return;
             }
 
-            if (hostSigPad.isEmpty()) {
-                errorMsg.textContent = '⚠️ Host signature is required.';
-                errorMsg.classList.add('show');
-                showNotification('Please sign as Host', 'error');
-                return;
-            }
-
             submitBtn.disabled = true;
 
             const agreementData = {
@@ -731,7 +719,6 @@
                 notes: document.getElementById('notes').value,
                 clientSignature: clientSigPad.toDataURL(),
                 clientDate: document.getElementById('clientDate').value,
-                hostSignature: hostSigPad.toDataURL(),
                 hostDate: document.getElementById('hostDate').value,
                 submittedAt: new Date().toISOString()
             };

@@ -543,9 +543,9 @@
                                     <img src="${agreement.clientSignature}" alt="Client Signature">
                                 </div>
 
-                                <h3 style="margin-top: 18px;">Host Signature</h3>
-                                <div class="signature-preview">
-                                    <img src="${agreement.hostSignature}" alt="Host Signature">
+                                <h3 style="margin-top: 18px;">✓ Authorized by Host</h3>
+                                <div class="signature-preview" style="background: rgba(217, 199, 168, 0.1); color: var(--primary); font-weight: 600;">
+                                    Pre-Authorized
                                 </div>
 
                                 <button class="view-btn">View Full Agreement</button>
@@ -568,9 +568,12 @@
                 </div>
 
                 <div class="signature-display">
-                    <h3>🏢 Host Signature (AnQa Khans)</h3>
-                    <img src="${agreement.hostSignature}" alt="Host Signature" style="max-height: 250px;">
-                    <div class="signature-date">Signed: ${new Date(agreement.hostDate).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'})}</div>
+                    <h3>🏢 Authorized by Host (AnQa Khans)</h3>
+                    <div style="text-align: center; padding: 40px; background: rgba(217, 199, 168, 0.1); border-radius: 6px; border: 1px dashed var(--primary);">
+                        <div style="font-size: 48px; margin-bottom: 12px;">✓</div>
+                        <p style="font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 1px;">Pre-Authorized Representative</p>
+                    </div>
+                    <div class="signature-date">Authorized: ${new Date(agreement.hostDate).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'})}</div>
                 </div>
 
                 <div style="background: rgba(217, 199, 168, 0.1); padding: 16px; border-radius: 8px; margin-top: 20px;">
