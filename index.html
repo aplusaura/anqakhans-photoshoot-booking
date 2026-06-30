@@ -796,7 +796,7 @@
                         </div>
                         <div class="date-field">
                             <label>Date</label>
-                            <input type="date" id="hostDate" value="2026-06-25" readonly style="opacity: 0.7;">
+                            <input type="date" id="hostDate" readonly style="opacity: 0.7;">
                         </div>
                     </div>
                 </div>
@@ -812,6 +812,15 @@
 
     <script>
         let clientSigPad, hostSigPad;
+
+        function updateHostDate() {
+            const hostDateInput = document.getElementById('hostDate');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            hostDateInput.value = `${year}-${month}-${day}`;
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Client Signature Pad
@@ -851,8 +860,24 @@
             resizeCanvases();
             window.addEventListener('resize', resizeCanvases);
 
-            // Set today's date
+            // Set today's date for client
             document.getElementById('clientDate').valueAsDate = new Date();
+
+            // Update host date to today
+            updateHostDate();
+
+            // Update host date every 24 hours (at midnight)
+            setInterval(() => {
+                const now = new Date();
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+
+                const timeUntilMidnight = tomorrow - now;
+                setTimeout(() => {
+                    updateHostDate();
+                }, timeUntilMidnight);
+            }, 24 * 60 * 60 * 1000);
         });
 
         function clearClientSig() {
