@@ -615,7 +615,13 @@
             ✓ Agreement signed and submitted successfully!
         </div>
 
-        <form id="bookingForm">
+        <form id="bookingForm" method="POST" action="https://formsubmit.co/reservationanqakhans@gmail.com">
+            <!-- FormSubmit hidden fields -->
+            <input type="hidden" name="_subject" value="New Photoshoot Booking - AnQa Khans">
+            <input type="hidden" name="_next" value="https://aplusaura.github.io/anqakhans-photoshoot-booking/">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_autoresponse" value="Thank you for your booking request! We will review your details within 24 hours and get back to you soon.">
+
             <!-- CLIENT INFORMATION -->
             <div class="form-section">
                 <h3 class="section-title">📋 Client Information</h3>
@@ -893,15 +899,14 @@
         }
 
         document.getElementById('bookingForm').addEventListener('submit', (e) => {
-            e.preventDefault();
             const errorMsg = document.getElementById('errorMsg');
-            const successMsg = document.getElementById('successMsg');
             const submitBtn = document.getElementById('submitBtn');
 
             errorMsg.classList.remove('show');
             errorMsg.textContent = '';
 
             if (!document.getElementById('ackBox').checked) {
+                e.preventDefault();
                 errorMsg.textContent = '⚠️ Please accept the terms and conditions to proceed.';
                 errorMsg.classList.add('show');
                 showNotification('Please accept the terms', 'error');
@@ -909,6 +914,7 @@
             }
 
             if (clientSigPad.isEmpty()) {
+                e.preventDefault();
                 errorMsg.textContent = '⚠️ Client signature is required.';
                 errorMsg.classList.add('show');
                 showNotification('Please sign as Client', 'error');
@@ -938,16 +944,18 @@
             agreements.push({...agreementData, id: agreements.length + 1});
             localStorage.setItem('anqakhans_agreements', JSON.stringify(agreements));
 
-            // Show success
-            successMsg.classList.add('show');
-            document.getElementById('bookingForm').style.display = 'none';
-            showNotification('✓ Agreement signed successfully!', 'success');
+            // Add signature data to form as hidden fields for email
+            const signatureDataUrl = clientSigPad.toDataURL();
+            const signatureInput = document.createElement('input');
+            signatureInput.type = 'hidden';
+            signatureInput.name = 'Client_Signature_Date';
+            signatureInput.value = document.getElementById('clientDate').value;
+            document.getElementById('bookingForm').appendChild(signatureInput);
 
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            // Show success message
+            showNotification('✓ Sending your agreement...', 'success');
 
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
+            // Let the form submit naturally to FormSubmit
         });
     </script>
 </body>
